@@ -10,9 +10,10 @@ class Octocat
     breed = @breeds.join("-")
 
     puts "I am of #{breed} breed, and my name is #{@name}."
+    
+    true
   end
 end
 
 m = Octocat.new("Mona", "cat", "octopus")
 m.display
-
