@@ -1,0 +1,26 @@
+---
+before:
+  requires: tester
+  script: |
+    running_test_cycle = create(:test_cycle, :running)
+    ended_test_cycle = create(:test_cycle, :running)
+
+    bugs = create_list(:default_bug, 3, test_cycle: running_test_cycle, tester: tester)
+    create_list(:default_bug, 3, test_cycle: ended_test_cycle, tester: tester)
+
+    ended_test_cycle.update!(end_at: 1.hour.ago)
+    ended_test_cycle.lock!
+
+scenario:
+  -
+    - Visit the app root route
+    - Do you see a link for "Bugs" in the sidebar navigation?
+  -
+    - Click that link
+    - Do you see a table of bugs with tabs for "Active" and "All", where "Active" is currently selected?
+  -
+    - Inspect the "Active" bugs table
+    - Do you only see 3 bugs?
+  -
+    - Click the tab for "All" bugs
+    - Does the table there show 6 bugs?
